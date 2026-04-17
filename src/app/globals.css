@@ -47,6 +47,24 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
   --background-image-home: url("/images/home-image.jpg");
+  @keyframes appear {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes slide {
+    from {
+      transform: translateX(100%);
+    }
+    to : {
+      transform: translateX(0%);
+    }
+  }
+  --animate-appear: appear 1s ease-in-out;
+  --animate-slide: slide 750ms ease-in-out;
 }
 
 :root {

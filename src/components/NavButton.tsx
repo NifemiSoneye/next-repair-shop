@@ -17,6 +17,14 @@ export function NavButton({ icon: Icon, label, href }: Props) {
       title={label}
       className="rounded-full"
       asChild
-    ></Button>
+    >
+      {href ? (
+        <Link href={href}>
+          <Icon />
+        </Link>
+      ) : (
+        <Icon />
+      )}
+    </Button>
   );
 }

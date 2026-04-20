@@ -46,3 +46,14 @@ export const tickets = pgTable("customers", {
 });
 
 //Create relations
+
+export const customersRelations = relations(customers, ({ many }) => ({
+  tickets: many(tickets),
+}));
+
+export const ticketRelations = relations(tickets, ({ one }) => ({
+  customer: one(customers, {
+    fields: [tickets.customerId],
+    references: [customers.id],
+  }),
+}));

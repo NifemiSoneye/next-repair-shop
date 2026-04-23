@@ -5,7 +5,7 @@ import z from "zod";
 export const insertCustomerSchema = createInsertSchema(customers, {
   firstName: (schema) => schema.firstName.min(1, "First Name is required"),
   lastName: (schema) => schema.lastName.min(1, "First Name is required"),
-  address1: (schema) => schema.address1.min(1, "Addressis required"),
+  address1: (schema) => schema.address1.min(1, "Address is required"),
   city: (schema) => schema.city.min(1, "City is required"),
   state: (schema) =>
     schema.state.length(2, "State must be exactly 2 characters"),

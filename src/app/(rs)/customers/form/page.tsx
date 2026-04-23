@@ -25,7 +25,7 @@ export default async function CustomerFormPage({
       }
       console.log(customer);
       // put customer form Component
-      return <CustomerForm />;
+      return <CustomerForm customer={customer} />;
     } else {
       // new customer form component
       return <CustomerForm />;

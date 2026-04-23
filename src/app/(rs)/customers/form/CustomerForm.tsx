@@ -5,13 +5,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { InputWithLabel } from "@/components/inputs/inputWithLabel";
-
+import { TextAreaWithLabel } from "@/components/inputs/TextAreaWithLabel";
+import { SelectWithLabel } from "@/components/inputs/selectWithLabel";
+import { StatesArray } from "@/constants/StatesArray";
 import {
   insertCustomerSchema,
   type insertCustomerSchemaType,
   type selectCustomerSchemaType,
 } from "@/zod-schemas/customer";
-import { TextAreaWithLabel } from "@/components/inputs/TextAreaWithLabel";
 
 type Props = {
   customer?: selectCustomerSchemaType;
@@ -74,6 +75,11 @@ export default function CustomerForm({ customer }: Props) {
             <InputWithLabel<insertCustomerSchemaType>
               fieldTitle="City"
               nameInSchema="city"
+            />
+            <SelectWithLabel<insertCustomerSchemaType>
+              fieldTitle="State"
+              nameInSchema="state"
+              data={StatesArray}
             />
           </div>
           <div className="flex flex-col gap-4 w-full max-w-xs">

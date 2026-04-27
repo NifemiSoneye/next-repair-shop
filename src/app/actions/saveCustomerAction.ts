@@ -3,6 +3,7 @@
 import { eq } from "drizzle-orm";
 import { flattenValidationErrors } from "next-safe-action";
 import { redirect } from "next/navigation";
+import { sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { customers } from "@/db/schema";
@@ -70,7 +71,7 @@ export const saveCustomerAction = actionClient
           notes: customer.notes?.trim() ?? null,
           active: customer.active,
         })
-        .where(eq(customers.id, customers.id!))
+        .where(eq(customers.id, customer.id!))
         .returning({ updatedId: customers.id });
       return {
         message: `Customer ID #${result[0].updatedId} updated successfully`,

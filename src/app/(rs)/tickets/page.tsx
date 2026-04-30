@@ -18,7 +18,11 @@ export default async function Tickets({
     return (
       <>
         <TicketSearch />
-        {results.length ? <TicketTable data={results} /> : null}
+        {results.length ? (
+          <TicketTable data={results} />
+        ) : (
+          <p className="mt-4">No open tickets found</p>
+        )}
       </>
     );
   }
@@ -27,7 +31,11 @@ export default async function Tickets({
   return (
     <>
       <TicketSearch />
-      {results.length ? <TicketTable data={results} /> : null}
+      {results.length ? (
+        <TicketTable data={results} />
+      ) : (
+        <p className="mt-4">No results found</p>
+      )}
     </>
   );
 }

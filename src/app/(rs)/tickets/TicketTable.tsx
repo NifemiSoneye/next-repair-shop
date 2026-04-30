@@ -7,7 +7,12 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  ColumnFiltersState,
+  SortingState,
   getPaginationRowModel,
+  getFilteredRowModel,
+  getFacetedUniqueValues,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -19,10 +24,19 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-import { Circle, CircleCheckIcon, CircleXIcon } from "lucide-react";
+import {
+  Circle,
+  CircleCheckIcon,
+  CircleXIcon,
+  ArrowUpDown,
+  ArrowDown,
+  ArrowUp,
+} from "lucide-react";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import Filter from "@/components/react-table/Filter";
 
 type Props = {
   data: TicketSearchResultsType;
@@ -32,6 +46,13 @@ type RowType = TicketSearchResultsType[0];
 
 export default function TicketTable({ data }: Props) {
   const router = useRouter();
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "ticketDate",
+      desc: false, //false for ascending
+    },
+  ]);
 
   const columnHeadersArray: Array<keyof RowType> = [
     "ticketDate",
@@ -64,7 +85,30 @@ export default function TicketTable({ data }: Props) {
       },
       {
         id: columnName,
-        header: columnName[0].toUpperCase() + columnName.slice(1),
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              className="pl-1 w-full flex justify-between"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              {columnName[0].toUpperCase() + columnName.slice(1)}
+
+              {column.getIsSorted() === "asc" && (
+                <ArrowUp className="ml-2 h-4 w-4" />
+              )}
+              {column.getIsSorted() === "desc" && (
+                <ArrowDown className="ml-2 h-4 w-4" />
+              )}
+              {column.getIsSorted() !== "desc" &&
+                column.getIsSorted() !== "asc" && (
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                )}
+            </Button>
+          );
+        },
         cell: ({ getValue }) => {
           //presentational
           const value = getValue();
@@ -88,13 +132,22 @@ export default function TicketTable({ data }: Props) {
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+      columnFilters,
+    },
     initialState: {
       pagination: {
         pageSize: 3,
       },
     },
+    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   return (
@@ -105,7 +158,7 @@ export default function TicketTable({ data }: Props) {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="bg-secondary">
+                  <TableHead key={header.id} className="bg-secondary p-1">
                     <div>
                       {header.isPlaceholder
                         ? null
@@ -114,6 +167,11 @@ export default function TicketTable({ data }: Props) {
                             header.getContext(),
                           )}
                     </div>
+                    {header.column.getCanFilter() ? (
+                      <div className="grid place-content-center">
+                        <Filter column={header.column} />
+                      </div>
+                    ) : null}
                   </TableHead>
                 ))}
               </TableRow>
@@ -147,6 +205,12 @@ export default function TicketTable({ data }: Props) {
           </p>
         </div>
         <div className="space-x-1">
+          <Button variant="outline" onClick={() => table.resetSorting()}>
+            Reset Sorting
+          </Button>
+          <Button variant="outline" onClick={() => table.resetColumnFilters()}>
+            Reset Filters
+          </Button>
           <Button
             variant="outline"
             onClick={() => table.previousPage()}

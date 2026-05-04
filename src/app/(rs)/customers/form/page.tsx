@@ -40,10 +40,16 @@ export default async function CustomerFormPage({
         );
       }
       // put customer form Component
-      return <CustomerForm customer={customer} isManager={isManager} />;
+      return (
+        <CustomerForm
+          key={customerId}
+          customer={customer}
+          isManager={isManager}
+        />
+      ); //key field allows remounting for useEffect
     } else {
       // new customer form component
-      return <CustomerForm isManager={isManager} />;
+      return <CustomerForm key="new" isManager={isManager} />;
     }
   } catch (e) {
     if (e instanceof Error) {

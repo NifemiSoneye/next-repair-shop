@@ -8,7 +8,6 @@ import { InputWithLabel } from "@/components/inputs/inputWithLabel";
 import { TextAreaWithLabel } from "@/components/inputs/TextAreaWithLabel";
 import { SelectWithLabel } from "@/components/inputs/selectWithLabel";
 import { CheckboxWithLabel } from "@/components/inputs/CheckBoxWithLabel";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { StatesArray } from "@/constants/StatesArray";
 import {
   insertCustomerSchema,
@@ -24,14 +23,11 @@ import { Check } from "lucide-react";
 
 type Props = {
   customer?: selectCustomerSchemaType;
+  isManager?: boolean | undefined;
 };
 
-export default function CustomerForm({ customer }: Props) {
-  const { getPermission, getPermissions, isLoading } = useKindeBrowserClient();
-
+export default function CustomerForm({ customer, isManager }: Props) {
   //Admins are also managers
-
-  const isManager = !isLoading && getPermission("manager")?.isGranted;
 
   const { toast } = useToast();
 
@@ -147,9 +143,7 @@ export default function CustomerForm({ customer }: Props) {
               nameInSchema="notes"
               className="h-40"
             />
-            {isLoading ? (
-              <p>Loading...</p>
-            ) : isManager && customer?.id ? (
+            {isManager && customer?.id ? (
               <CheckboxWithLabel<insertCustomerSchemaType>
                 fieldTitle="Active"
                 nameInSchema="active"
